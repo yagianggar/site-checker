@@ -38,6 +38,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/your_sites', sites.site_list);
+app.get('/your_sites/add', sites.add);
 app.get('/check', function (req, res) {
 	var start = process.hrtime();
 	request({
