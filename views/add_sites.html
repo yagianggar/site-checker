@@ -22,6 +22,16 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
+    <script type="text/javascript">
+        function isNumberKey(evt)
+        {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+
+            return true;
+        }
+    </script>
   </head>
 
   <body>
@@ -40,19 +50,13 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
-            <li class="active"><a href="#">Your Sites</a></li>
+            <li><a href="#">Your Sites</a></li>
             <li><a href="#about">Dashboard</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+            <li class="dropdown active">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sites<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
+                  <li><a href="view">Sites Management</a></li>
               </ul>
             </li>
           </ul>
@@ -62,25 +66,29 @@
 
     <div class="container">
       <div class="table-responsive" style="padding-top:40px;" >
+        {{error_msg}}
         <h2>Add New Sites</h2>
         <form class="form-horizontal" role="form">
           <div class="form-group">
-            <label for="site_name" class="col-sm-2 control-label">URL</label>
+            <label for="url" class="col-sm-2 control-label">URL</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" id="site_name" placeholder="site name">
+              <input type="url" class="form-control" id="url" placeholder="Site Url">
             </div>
           </div>
           <div class="form-group">
             <label for="interval" class="col-sm-2 control-label">Interval Checking</label>
             <div class="col-sm-5">
-              <input type="text" class="form-control" id="interval" placeholder="Interval in minutes">
+              <input type="text" class="form-control" id="interval" placeholder="Interval in minutes" onkeypress="return isNumberKey(event)">
             </div>
           </div>
+          <div id="error-status">
+               
+         </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <!--<button type="submit" class="btn btn-default">Submit</button>-->
-              <a class="btn btn-primary" role="button" href="/your_sites/add">Save</a>
-              <a class="btn btn-primary" role="button" href="/your_sites">Cancel</a>
+              <a id="btnSave" class="btn btn-primary" role="button" href="#">Save</a>
+              <a class="btn btn-primary" role="button" href="/sites/view">Cancel</a>
             </div>
           </div>
         </form>
@@ -94,5 +102,26 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../javascripts/jquery/jquery-1.10.2.min.js"></script>
     <script src="../bootstrap-3.0.3-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $("#btnSave").click(function () {
+            var url = $('#url').val();
+            var interval = $('#interval').val();
+            $("#error-status")[0].innerHTML = '<div class="alert alert-info"><strong>Please wait...</strong>Saving site</div>';
+            $.ajax({
+                type : 'POST'
+                ,url : '/sites/save'
+                ,data : 'user_id=1&url='+url+'&interval='+interval
+                ,success : function (resp) {
+                     if (resp.error) {
+                      $("#error-status")[0].innerHTML = '<div class="alert alert-danger"><strong>Save Failed : </strong>'+resp.error_msg+'</div>';
+                     } else {
+                      $("#error-status")[0].innerHTML = '<div class="alert alert-success">'+resp.msg+'</div>';
+                     }
+                }
+            });
+        });
+      });
+    </script>
   </body>
 </html>
