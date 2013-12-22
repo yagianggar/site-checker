@@ -12,6 +12,7 @@ var path = require('path');
 var hbs = require('hbs');
 var io = require('socket.io');
 var request = require('request'); //https://github.com/mikeal/request
+var database = require('./libs/database.js'); // https://github.com/felixge/node-mysql
 
 var app = express();
 
@@ -35,10 +36,19 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+//-- Database Connect
+var connection = database.connect();
+/*
+connection.query('SELECT * from divisi', function(err, rows, fields) {
+  if (err) throw err;
+  console.log(rows);
+});
+*/
+connection.end();
+
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/your_sites', sites.site_list);
-app.get('/your_sites/add', sites.add);
+
 app.get('/check', function (req, res) {
 	var start = process.hrtime();
 	request({
@@ -60,6 +70,14 @@ app.get('/check', function (req, res) {
 		res.send(r);
 	});
 });
+
+//-- Sites Management
+app.post('/sites/save',sites.save);
+app.get('/your_sites', sites.site_list);
+app.get('/sites/add', sites.add);
+app.get('/sites/view',sites.view);
+//app.get('/sites/update/:id',sites.update);
+app.get('/sites/delete/:id',sites.delete);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
