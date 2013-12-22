@@ -10,6 +10,6 @@
     "hbs": "*",
     "socket.io" : "*",
     "request": "*",
-    "pg" : "*"
+    "mysql" : "*"
   }
 }
