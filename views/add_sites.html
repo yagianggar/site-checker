@@ -116,7 +116,11 @@
                      if (resp.error) {
                       $("#error-status")[0].innerHTML = '<div class="alert alert-danger"><strong>Save Failed : </strong>'+resp.error_msg+'</div>';
                      } else {
-                      $("#error-status")[0].innerHTML = '<div class="alert alert-success">'+resp.msg+'</div>';
+                        $('#url').val("");
+                        $('#interval').val("");
+
+                        $("#error-status")[0].innerHTML = '<div class="alert alert-success">'+resp.msg+'</div>';
+                        window.location = '/sites/view';
                      }
                 }
             });
