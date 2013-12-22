@@ -21,12 +21,10 @@ exports.save = function (req, res) {
 	var post = req.body
 	var insertQuery = "INSERT INTO sites (user_id,sites,intervals,active) VALUES ('111','"+post.url+"','"+post.interval+"',true)"
 	
-	var connection = database.connect();
 	connection.query(insertQuery, function (err, rows, fields) {
 		//if (err) throw err;
 
 		if (err) {
-			//res.render('add_sites', { title: 'Add New Sites', msg : 'This is site page', error : true, error_msg : err.code });
 			data = {
 				'error' : true,
 				'error_msg' : err.code
@@ -43,13 +41,11 @@ exports.save = function (req, res) {
       		res.end(JSON.stringify(data));
 		}
 	});
-	connection.end();
+	//connection.end();
 }
 
 exports.view = function (req, res) {
 	connection.query("SELECT * FROM sites", function (err, rows, fields) {
-		console.log("Response");
-		console.log(rows);
 		res.render('site', {title : 'Sites List', msg : 'This is sites management', data : JSON.stringify(rows)});
 	});
 }
@@ -57,6 +53,5 @@ exports.view = function (req, res) {
 exports.delete = function (req, res) {
 	connection.query("DELETE FROM sites WHERE id="+req.params.id, function (err, rows, fields) {
 		res.redirect('/sites/view');
-		//res.render('site', {title : 'Sites List', msg : 'This is sites management', data : rows});
 	});
 }
