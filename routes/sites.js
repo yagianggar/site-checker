@@ -19,7 +19,13 @@ exports.add = function(req, res){
 
 exports.save = function (req, res) {
 	var post = req.body
-	var insertQuery = "INSERT INTO sites (user_id,sites,intervals,active) VALUES ('111','"+post.url+"','"+post.interval+"',true)"
+	var insertQuery = null;
+
+	if (post.site_id == "" || typeof post.site_id === "undefined") {
+		insertQuery = "INSERT INTO sites (user_id,sites,intervals,active) VALUES ('111','"+post.url+"','"+post.interval+"',true)";
+	} else {
+		insertQuery = "UPDATE sites SET sites='"+post.url+"',intervals='"+post.interval+"' WHERE id="+post.site_id;
+	}
 	
 	connection.query(insertQuery, function (err, rows, fields) {
 		//if (err) throw err;
@@ -47,6 +53,12 @@ exports.save = function (req, res) {
 exports.view = function (req, res) {
 	connection.query("SELECT * FROM sites", function (err, rows, fields) {
 		res.render('site', {title : 'Sites List', msg : 'This is sites management', data : JSON.stringify(rows)});
+	});
+}
+
+exports.update = function (req, res) {
+	connection.query("SELECT * FROM sites WHERE id="+req.params.id, function (err, rows, fields) {
+		res.render('update_sites', {title : 'Update Sites', msg : 'This is sites management', data : JSON.stringify(rows)});
 	});
 }
 
