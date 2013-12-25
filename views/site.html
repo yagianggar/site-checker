@@ -115,10 +115,12 @@
         '<colgroup>'+
           '<col class="col-md-2">'+
           '<col class="col-md-1">'+
+          '<col class="col-md-1">'+
         '</colgroup>'+
         '<thead>'+
           '<tr>'+
             '<th>Sites</th>'+
+            '<th>Interval (minutes)</th>'+
             '<th>Option</th>'+
           '</tr>'+
         '</thead>'+
@@ -129,6 +131,9 @@
          table_data +='<tr>'+
             '<td>'+
               sites_data[i].sites+
+            '</td>'+
+            '<td>'+
+              sites_data[i].intervals+
             '</td>'+
             '<td><div align="center"><a href="/sites/update/'+sites_data[i].id+'">Update</a> | <a href="/sites/delete/'+sites_data[i].id+'">Delete</a></div></td>'+
           '</tr>';
