@@ -76,7 +76,7 @@ app.post('/sites/save',sites.save);
 app.get('/your_sites', sites.site_list);
 app.get('/sites/add', sites.add);
 app.get('/sites/view',sites.view);
-//app.get('/sites/update/:id',sites.update);
+app.get('/sites/update/:id',sites.update);
 app.get('/sites/delete/:id',sites.delete);
 
 http.createServer(app).listen(app.get('port'), function(){
